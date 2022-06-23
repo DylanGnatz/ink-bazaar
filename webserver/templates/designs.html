@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+
+{% block content %}
+<script type="text/javascript" src="{{ url_for('static', filename = 'designs.js') }}"></script>
+
+
+    <script>
+        let data = {{data|tojson}}
+            console.log(data)
+    </script>
+<div class="container-fluid">
+    <div class="row">
+        <div class = "col-sm-3">
+            <br>
+            <div id="salespeople"></div>
+        </div>
+        <div class = "col-sm-3">
+            <br>
+            <div id="clients"></div>
+        </div>
+        <div class = "col-sm-2">
+            <br>
+            <div id="reamnumber"></div>
+        </div>
+        <div class = "col-sm-1">
+            <br>
+            <div id="deletebuttons"></div>
+        </div>
+
+    </div>
+    {% for n in data %}
+    <div>{{n}}</div>
+    {% endfor %}
+</div>
+{% endblock %}

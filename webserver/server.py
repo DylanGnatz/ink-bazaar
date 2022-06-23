@@ -34,9 +34,8 @@ app = Flask(__name__, template_folder=tmpl_dir)
 #
 #     DATABASEURI = "postgresql://biliris:foobar@104.196.152.219/proj1part2"
 #
-DATABASEURI = "postgresql://dlg2178:postgres123@104.196.152.219/proj1part2"
-
-
+DATABASEURI = "postgresql://dlg2178:postgres123@35.196.192.139/proj1part2"
+print(DATABASEURI)
 #
 # This line creates a database engine that knows how to connect to the URI above.
 #
@@ -65,7 +64,7 @@ def before_request():
   try:
     g.conn = engine.connect()
   except:
-    print "uh oh, problem connecting to database"
+    print ("uh oh, problem connecting to database")
     import traceback; traceback.print_exc()
     g.conn = None
 
@@ -107,16 +106,16 @@ def index():
   """
 
   # DEBUG: this is debugging code to see what request looks like
-  print request.args
+  print(request.args)
 
 
   #
   # example of a database query
   #
-  cursor = g.conn.execute("SELECT name FROM test")
+  cursor = g.conn.execute("SELECT * FROM artists")
   names = []
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    names.append(result)  # can also be accessed using result[0]
   cursor.close()
 
   #
@@ -162,6 +161,105 @@ def index():
 # Notice that the function name is another() rather than index()
 # The functions for each app.route need to have different names
 #
+
+@app.route('/designs')
+def designs():
+  print(request.args)
+
+  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.available = true;"
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  designs = []
+  for result in cursor:
+    designs.append(result)  # can also be accessed using result[0]
+  cursor.close()
+  context = dict(data = designs)
+  return render_template("designs.html", **context)
+
+@app.route('/artists')
+def artists():
+  print(request.args)
+
+  sqlquery = "SELECT artist_id, name, city, state, biography FROM artists;"
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  artists = []
+  for result in cursor:
+    artists.append(result)  # can also be accessed using result[0]
+  cursor.close()
+  context = dict(data = artists)
+  return render_template("artists.html", **context)
+
+@app.route('/studios')
+def studios():
+  print(request.args)
+
+  sqlquery = "SELECT * FROM studio;"
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  studios = []
+  for result in cursor:
+    studios.append(result)  # can also be accessed using result[0]
+  cursor.close()
+  context = dict(data = studios)
+  return render_template("studios.html", **context)
+
+
+
+@app.route('/appointments')
+def appointments():
+  print(request.args)
+
+  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount FROM appointments JOIN customers ON appointments.customer_id = customers.customer_id JOIN artists ON appointments.artist_id = artists.artist_id JOIN designs ON appointments.design_id = designs.design_id JOIN studio ON appointments.studio_id = studio.studio_id JOIN payments ON appointments.payment_id = payments.payment_id;"
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  appts = []
+  for result in cursor:
+    appts.append(result)  # can also be accessed using result[0]
+  cursor.close()
+  context = dict(data = appts)
+  return render_template("appointments.html", **context)
+
+@app.route('/billing')
+def billing():
+  print(request.args)
+
+  sqlquery = "SELECT * FROM payments;"
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  payments = []
+  for result in cursor:
+    payments.append(result)  # can also be accessed using result[0]
+  cursor.close()
+  context = dict(data = payments)
+  return render_template("billing.html", **context)
+
+@app.route('/profile/<profileid>')
+def profile(profileid=None):
+  print(request.args)
+
+  sqlquery = "SELECT * FROM customers WHERE customer_id = {};".format(profileid)
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  customer = []
+  for result in cursor:
+    customer.append(result)  # can also be accessed using result[0]
+  cursor.close()
+  context = dict(data = customer)
+  return render_template("profile.html", **context)
+
 @app.route('/another')
 def another():
   return render_template("another.html")
@@ -203,7 +301,7 @@ if __name__ == "__main__":
     """
 
     HOST, PORT = host, port
-    print "running on %s:%d" % (HOST, PORT)
+    print("running on %s:%d" % (HOST, PORT))
     app.run(host=HOST, port=PORT, debug=debug, threaded=threaded)
 
 
