@@ -1,0 +1,14 @@
+ artist_id |       name        |                         biography                         |     city      | state | registration_date 
+-----------+-------------------+-----------------------------------------------------------+---------------+-------+-------------------
+         1 | John Smith        | Handpoke artist in New York.                              | New York      | NY    | 2021-11-24
+         2 | Nina Ashland      | Bay area tattoo artist.                                   | San Francisco | CA    | 2022-03-04
+         3 | Dylan Thomas      | Machine tats in Brooklyn.                                 | New York      | NY    | 2022-02-06
+         4 | Jacob Dylan       | Tattoo artist with 10 years of experience.                | Chicago       | IL    | 2022-01-16
+         5 | Sara Sheffield    | When I'm not tattooing\, I'm probably at the beach.       | Los Angeles   | CA    | 2022-05-22
+         6 | Eric Wallingford  | Love tattooing and the Pacific Northwest.                 | Seattle       | WA    | 2022-05-21
+         7 | Gina Aleppo       | Experienced artist that specializes in handpoking.        | San Francisco | CA    | 2022-04-20
+         8 | Michelle Chen     | Tattoo artist specializing in traditional Chinese tattoos | Los Angeles   | CA    | 2022-01-30
+         9 | Ralph Nader       | Tattoo apprentice in Seattle.                             | Seattle       | CA    | 2022-02-21
+        10 | Sophia Gutierrez  | I've been tattooing for 7 years (handpokes/machine).      | Los Angeles   | CA    | 2021-12-16
+(10 rows)
+
