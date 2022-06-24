@@ -466,6 +466,59 @@ def artistprofile(profileid=None):
 def another():
   return render_template("another.html")
 
+# Search for designs
+@app.route('/searchdesigns', methods=['POST'])
+def searchdesigns():
+  searchterm = request.form['term']
+  intterm = 0
+  if searchterm.isnumeric():
+    intterm = int(searchterm)
+  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.design_id = '{}' OR artists.name LIKE '%%{}%%' OR designs.description LIKE '%%{}%%' OR artists.city LIKE '%%{}%%';".format(intterm, searchterm, searchterm, searchterm)
+  cursor = g.conn.execute(sqlquery)
+  designs = {}
+  for result in cursor:
+    design = {
+    'id': result[0],
+    'name': result[1],
+    'desc': result[2],
+    'city': result[3],
+    'state': result[4],
+    'cost': result[5],
+    'available': result[6],
+    'artistid': result[7],
+    }
+    designs[result[0]] = design
+  cursor.close()
+  print(designs)
+  context = dict(data = designs)
+  return render_template("designs.html", **context)
+
+
+@app.route('/searchartists', methods=['POST'])
+def searchdartists():
+  searchterm = request.form['term']
+  intterm = 0
+  if searchterm.isnumeric():
+    intterm = int(searchterm)
+  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.design_id = '{}' OR artists.name LIKE '%%{}%%' OR designs.description LIKE '%%{}%%' OR artists.city LIKE '%%{}%%';".format(intterm, searchterm, searchterm, searchterm)
+  sqlquery = "SELECT artist_id, name, city, state, biography FROM artists WHERE artist_id = '{}' OR name LIKE '%%{}%%' OR city LIKE '%%{}%%' OR state LIKE '%%{}%%';".format(intterm, searchterm, searchterm, searchterm)
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  artists = {}
+  for result in cursor:
+    artist = {
+    'id': result[0],
+    'name': result[1],
+    'city': result[2],
+    'state': result[3],
+    'bio': result[4]
+    }
+    artists[result[0]] = artist
+  cursor.close()
+  context = dict(data = artists)
+  return render_template("artists.html", **context)
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])

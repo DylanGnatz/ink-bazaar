@@ -8,6 +8,12 @@
 <script type="text/javascript" src="{{ url_for('static', filename = 'artists.js') }}"></script>
 
     <div class="container-fluid">
+        Search for an artist by artist ID , name, city, or state:
+        <br>
+        <form method = "POST" action = "/searchartists" class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" name="term" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
         
         <div class="row">
             <div class = "col-sm-2">
