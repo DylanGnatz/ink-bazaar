@@ -8,6 +8,10 @@ to manage appointments. Artists are able to upload their designs
 and set their schedule, while customers can seek available designs in 
 their area, and book appointments with local artists. 
 
+## Server Address
+InkBazaar is running at the following address:
+http://35.205.189.22:8111
+
 ## Database
 My database for this project resides at "postgresql://dlg2178:<password>@35.196.192.139/proj1part2"
 
@@ -23,15 +27,20 @@ The design view allows customers to book new appointments. Clicking the button t
 
 Search functionality is also implemented on the artists view, to allow customers to search artists by id, name, or area. Clicking on artist's name links to their personal profile, which also shows all of their designs. 
 
+When a customer makes an appointment, it must be confirmed by the artist. Artists can confirm or cancel appointments from the Artist Profile view. 
+
+Artists can post new designs from the Artist Profile View. Their current designs are also listed and they can toggle their availability. 
+
+Profile renders the customer's profile and details. Customers can manage their bookings on the Profile view to delete cancel future appointments. 
+
 Billing shows all the billing records for previous appointments and links to the appointment table. 
 
 Studios lists the ids and addresses of all the studios in the system. 
 
-Profile renders the customer's profile and details.
 
-I have implemented the majority of the functionalities on the platform, but still need to implement user registration and authentication, which will separate the views and permissions between artists and customers. 
+I have implemented the majority of the functionalities on the platform, but still need to implement user registration and authentication, which will separate the views and permissions between artists and customers. Additionally I need to implement billing. 
 
-Also to be implemented is a form for artists to add new designs, as well as a billing module to generate new payments for appointments. 
+ 
 
 ## Interesting Database Interactions
 
