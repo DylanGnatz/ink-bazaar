@@ -32,8 +32,8 @@
             <div class = "col-sm-1">
                 Cost
             </div>
-            <div class = "col-sm-1">
-                Available
+            <div class = "col-sm-2">
+                Toggle Availability
             </div>
         </div>
             {% for v in data.designs %}
@@ -47,8 +47,16 @@
             <div class = "col-sm-1">
                 {{v.cost}}
             </div>
-            <div class = "col-sm-1">
-                {{v.available}}
+            <div class = "col-sm-2">
+            {% if v.available %}
+            <form method="POST" action="/available/{{v.id}}">
+            <input type="submit" id = "{{v.id}}" class="btn btn-primary" value = "Available">
+            </form>
+            {% else %}
+            <form method="POST" action="/unavailable/{{v.id}}">
+            <input type="submit" id = "{{v.id}}" class="btn btn-danger" value = "Unavailable">
+            </form>
+            {% endif %}   
             </div>
             </div>
            

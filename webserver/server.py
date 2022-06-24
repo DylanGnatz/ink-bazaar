@@ -144,7 +144,7 @@ def getdesign(designid=None):
 @app.route('/designs')
 def designs(designid=None):
   print(request.args)
-  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.available = true;"
+  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs LEFT JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.available = true;"
   # example of a database query
   #
   cursor = g.conn.execute(sqlquery)
@@ -478,7 +478,7 @@ def searchdesigns():
   intterm = 0
   if searchterm.isnumeric():
     intterm = int(searchterm)
-  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.design_id = '{}' OR artists.name LIKE '%%{}%%' OR designs.description LIKE '%%{}%%' OR artists.city LIKE '%%{}%%';".format(intterm, searchterm, searchterm, searchterm)
+  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs LEFT JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.design_id = '{}' OR artists.name LIKE '%%{}%%' OR designs.description LIKE '%%{}%%' OR artists.city LIKE '%%{}%%';".format(intterm, searchterm, searchterm, searchterm)
   cursor = g.conn.execute(sqlquery)
   designs = {}
   for result in cursor:
@@ -640,13 +640,22 @@ def createdesign():
   print(available)
   print(created)
   print(str(new_id))
-  i#nsertquery = "INSERT INTO appointments VALUES({}, '{}', NULL, {}, {}, {}, {}, NULL, {})".format(max_id+1, appttime, cost, artistid, designid, customerid, studioid)
-  #cursor = g.conn.execute(sqlquery)
-  #cursor.close()
-  #context = None
-  #return render_template("artists.html", **context)
-  #g.conn.execute(insertquery)
-  return redirect('/appointments')
+  insertquery = "INSERT INTO designs VALUES({}, {}, '{}', {}, {}, '{}')".format(new_id, artistid, created, cost, available, desc)
+  g.conn.execute(insertquery)
+  url = '/artist/' + str(artistid)
+  return redirect(url)
+
+@app.route('/available/<designid>', methods=['POST'])
+def available(designid=None):
+  updatequery = "UPDATE designs SET available = False WHERE design_id = {}".format(designid)
+  g.conn.execute(updatequery)
+  return redirect('/designs')
+
+@app.route('/unavailable/<designid>', methods=['POST'])
+def unavailable(designid=None):
+  updatequery = "UPDATE designs SET available = True WHERE design_id = {}".format(designid)
+  g.conn.execute(updatequery)
+  return redirect('/designs')
 
 @app.route('/add', methods=['POST'])
 def add():
