@@ -6,6 +6,13 @@
   console.log(data);
 </script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'designs.js') }}"></script>
+ <script>
+    $(function(){ // let all dom elements are loaded
+     $(document).on('show.bs.modal','#exampleModal', function () {
+        alert('hi');
+      });
+    });
+</script>
 
     <div class="container-fluid">
         Search for a design by design ID, description, artist, or city:
@@ -37,6 +44,9 @@
             <div class = "col-sm-1">
                 Available
             </div>
+            <div class = "col-sm-1">
+                Book
+            </div>
         </div>
             {% for k,v in data.items() %}
             <div class="row">
@@ -60,6 +70,14 @@
             </div>
             <div class = "col-sm-1">
                 {{v.available}}
+            </div>
+            <div class = "col-sm-1">
+                {% if v.available %}
+                <form method="POST" action="/book/{{v.id}}">
+                <input type="submit" id = "{{v.id}}" class="btn btn-primary" value = "book">
+                </form>
+                {% endif %}
+
             </div>
             </div>
            

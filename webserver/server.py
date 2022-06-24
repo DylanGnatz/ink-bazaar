@@ -41,15 +41,7 @@ print(DATABASEURI)
 #
 engine = create_engine(DATABASEURI)
 
-#
-# Example of running queries in your database
-# Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
-#
-engine.execute("""CREATE TABLE IF NOT EXISTS test (
-  id serial,
-  name text
-);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
+
 
 
 @app.before_request
@@ -210,7 +202,6 @@ def designs(designid=None):
     }
     designs[result[0]] = design
   cursor.close()
-  print(designs)
   context = dict(data = designs)
   return render_template("designs.html", **context)
 
@@ -479,7 +470,7 @@ def searchdesigns():
   for result in cursor:
     design = {
     'id': result[0],
-    'name': result[1],
+    'artist': result[1],
     'desc': result[2],
     'city': result[3],
     'state': result[4],
@@ -519,6 +510,46 @@ def searchdartists():
   cursor.close()
   context = dict(data = artists)
   return render_template("artists.html", **context)
+
+@app.route('/book/<designid>', methods=['POST'])
+def bookappt(designid=None):
+  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.design_id = {};".format(designid)
+  cursor = g.conn.execute(sqlquery)
+  design = {}
+  appt_options = {}
+  for result in cursor:
+    design = {
+    'id': result[0],
+    'artist': result[1],
+    'desc': result[2],
+    'city': result[3],
+    'state': result[4],
+    'cost': result[5],
+    'available': result[6],
+    'artistid': result[7],
+    }
+  cursor.close()
+  appt_options['design'] = design
+
+  query2 = "SELECT address, city, state, zip_code, studio_id FROM studio WHERE city = '{}'".format(design['city'])
+  cursor = g.conn.execute(query2)
+  studios = []
+  for result in cursor:
+    studios.append(result)
+  appt_options['studios'] = studios
+  cursor.close()
+
+  query3 = "SELECT start_time, end_time FROM appointments WHERE artist_id = {}".format(design['artistid'])
+  cursor = g.conn.execute(query3)
+  bookings = []
+  for result in cursor:
+    bookings.append(result)
+  cursor.close()
+  appt_options['bookings'] = bookings
+  print(appt_options)
+  context = dict(data = appt_options)
+  return render_template("book.html", **context)
+
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
