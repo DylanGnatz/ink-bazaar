@@ -310,6 +310,50 @@ def profile(profileid=None):
   context = dict(data = customer)
   return render_template("profile.html", **context)
 
+@app.route('/artist/<profileid>')
+def artistprofile(profileid=None):
+  print(request.args)
+
+  sqlquery = "SELECT artist_id, name, city, state, biography, registration_date FROM artists WHERE artists.artist_id = {};".format(profileid)
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  profile = {}
+  for result in cursor:
+    profile = {
+    'id': result[0],
+    'name': result[1],
+    'city': result[2],
+    'state': result[3],
+    'bio': result[4],
+    'registered': result[5]
+    }
+  cursor.close()
+
+  query2 = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE artists.artist_id = {};".format(profileid)
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(query2)
+  designs = []
+  for result in cursor:
+    design = {
+    'id': result[0],
+    'name': result[1],
+    'desc': result[2],
+    'city': result[3],
+    'state': result[4],
+    'cost': result[5],
+    'available': result[6],
+    }
+    designs.append(design)
+  cursor.close()
+  profile['designs'] = designs
+  context = dict(data = profile)
+  return render_template("artistprofile.html", **context)
+
+
 @app.route('/another')
 def another():
   return render_template("another.html")

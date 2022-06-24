@@ -1,29 +1,30 @@
-{% extends "index.html" %}
-
+<{% extends "index.html" %}
 {% block content %}
 <script>
   var data = {{ data|tojson }};
   console.log(data);
 </script>
-<script type="text/javascript" src="{{ url_for('static', filename = 'designs.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'artists.js') }}"></script>
 
     <div class="container-fluid">
-        
-        <div class="row">
+            <br>
+            <h1><i>{{data.name}}</i></h1>
+            <br>
+            <h3>Tattoo artist from {{data.city}}, {{data.state}}</h3>
+            <br>
+            <h4>Member since: {{data.registered}}</h4>
+            <br>
+            Bio: {{data.bio}}
+            <br>
+            <br>
+            <h2>Tattoo Designs:</h2>
+            <br>
+                <div class="row">
             <div class = "col-sm-1">
                 Design ID
             </div>
-            <div class = "col-sm-2">
-                Artist Name
-            </div>
-            <div class = "col-sm-3">
+            <div class = "col-sm-4">
                 Description
-            </div>
-            <div class = "col-sm-2">
-                City
-            </div>
-            <div class = "col-sm-1">
-                State
             </div>
             <div class = "col-sm-1">
                 Cost
@@ -32,22 +33,13 @@
                 Available
             </div>
         </div>
-            {% for k,v in data.items() %}
+            {% for v in data.designs %}
             <div class="row">
             <div class = "col-sm-1">
                 {{v.id}}
             </div>
-            <div class = "col-sm-2">
-                {{v.name}}
-            </div>
-            <div class = "col-sm-3">
+            <div class = "col-sm-4">
                 {{v.desc}}
-            </div>
-            <div class = "col-sm-2">
-                {{v.city}}
-            </div>
-            <div class = "col-sm-1">
-                {{v.state}}
             </div>
             <div class = "col-sm-1">
                 {{v.cost}}
@@ -59,7 +51,7 @@
            
             {% endfor %}
         </div>
-    </div>
 
-    
+     </div>
+
 {% endblock %}
