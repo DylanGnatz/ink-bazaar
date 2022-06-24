@@ -18,6 +18,7 @@ import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
+from datetime import datetime
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -504,7 +505,6 @@ def searchdartists():
   intterm = 0
   if searchterm.isnumeric():
     intterm = int(searchterm)
-  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.design_id = '{}' OR artists.name LIKE '%%{}%%' OR designs.description LIKE '%%{}%%' OR artists.city LIKE '%%{}%%';".format(intterm, searchterm, searchterm, searchterm)
   sqlquery = "SELECT artist_id, name, city, state, biography FROM artists WHERE artist_id = '{}' OR name LIKE '%%{}%%' OR city LIKE '%%{}%%' OR state LIKE '%%{}%%';".format(intterm, searchterm, searchterm, searchterm)
   #
   # example of a database query
@@ -611,7 +611,42 @@ def confirm(apptid=None):
   updatequery = "UPDATE appointments SET confirmed = True WHERE appointment_id = {}".format(apptid)
   g.conn.execute(updatequery)
   return redirect('/appointments')
+
 # Example of adding new data to the database
+@app.route('/postdesign/<artistid>', methods=['POST'])
+def postdesign(artistid=None):
+  context = dict(data = artistid)
+  return render_template("newdesign.html", **context)
+
+
+@app.route('/createdesign', methods=['POST'])
+def createdesign():
+  artistid = request.form['artistid']
+  desc = request.form['desc']
+  cost = request.form['designcost']
+  available = request.form['available']
+  created = datetime.now()
+
+  idquery = "SELECT MAX(design_id) FROM designs"
+
+  cursor = g.conn.execute(idquery)
+  for result in cursor:
+    max_id = result
+  cursor.close()
+  new_id = int(max_id[0]) + 1
+  print(artistid)
+  print(desc)
+  print(cost)
+  print(available)
+  print(created)
+  print(str(new_id))
+  i#nsertquery = "INSERT INTO appointments VALUES({}, '{}', NULL, {}, {}, {}, {}, NULL, {})".format(max_id+1, appttime, cost, artistid, designid, customerid, studioid)
+  #cursor = g.conn.execute(sqlquery)
+  #cursor.close()
+  #context = None
+  #return render_template("artists.html", **context)
+  #g.conn.execute(insertquery)
+  return redirect('/appointments')
 
 @app.route('/add', methods=['POST'])
 def add():
