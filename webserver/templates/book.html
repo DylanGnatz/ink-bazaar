@@ -11,20 +11,25 @@
 Book your tattoo appointment now!
 <form method = "POST" action = "/createappt">
   <div class="form-group" >
+  	<label for="exampleFormControlInput1">Customer ID</label>
+    <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.customer[0]}}" name="customerid" readonly>
+    <label for="exampleForontrolInput1">Customer Name</label>
+    <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.customer[1]}}" name="customername" readonly>
   	<label for="exampleFormControlInput1">Design ID</label>
-    <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.design.id}}" readonly>
-  
+    <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.design.id}}" name="designid" readonly>
+   <label for="exampleFormControlInput1">Artist ID</label>
+    <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.design.artistid}}" name="artistid" readonly>
   <label for="exampleFormControlInput1">Artist Name</label>
-    <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.design.artist}}" readonly>
+    <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.design.artist}}" name="artistname" readonly>
   <label for="exampleFormControlInput1">Design Description</label>
     <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.design.desc}}" readonly>
     <label for="exampleFormControlInput1">Projected Cost ($)</label>
-    <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.design.cost}}" readonly>
+    <input type="text" class="form-control" id="exampleFormControlInput1" value="{{data.design.cost}}" name="designcost" readonly>
 
     <label for="exampleFormControlSelect1">Available Studios</label>
-    <select class="form-control" id="exampleFormControlSelect1">
+    <select class="form-control" id="exampleFormControlSelect1" name="studioid">
     {% for studio in data.studios %}
-      <option>{{studio[0]}}, {{studio[1]}}, {{studio[2]}}, {{studio[3]}}</option>
+      <option value="{{studio[4]}}">{{studio[0]}}, {{studio[1]}}, {{studio[2]}}, {{studio[3]}}</option>
     {% endfor %}
     </select>
     <label for="appttime">Appointment Time:</label>

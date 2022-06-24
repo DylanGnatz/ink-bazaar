@@ -22,6 +22,8 @@ from flask import Flask, request, render_template, g, redirect, Response
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
 
+USER_ID = 2
+
 
 #
 # The following is a dummy URI that does not connect to a valid database. You will need to modify it to connect to your Part 2 database in order to use the data.
@@ -280,7 +282,7 @@ def getstudio(studioid=None):
 def appointments():
   print(request.args)
 
-  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments JOIN customers ON appointments.customer_id = customers.customer_id JOIN artists ON appointments.artist_id = artists.artist_id JOIN designs ON appointments.design_id = designs.design_id JOIN studio ON appointments.studio_id = studio.studio_id JOIN payments ON appointments.payment_id = payments.payment_id;"
+  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments LEFT JOIN customers ON appointments.customer_id = customers.customer_id LEFT JOIN artists ON appointments.artist_id = artists.artist_id LEFT JOIN designs ON appointments.design_id = designs.design_id LEFT JOIN studio ON appointments.studio_id = studio.studio_id LEFT JOIN payments ON appointments.payment_id = payments.payment_id;"
   #
   # example of a database query
   #
@@ -546,9 +548,44 @@ def bookappt(designid=None):
     bookings.append(result)
   cursor.close()
   appt_options['bookings'] = bookings
-  print(appt_options)
+  query4 = "SELECT customer_id, name FROM customers WHERE customer_id = {}".format(USER_ID)
+  cursor = g.conn.execute(query4)
+  for result in cursor:
+    customer = result
+  cursor.close()
+  appt_options['customer'] = customer
   context = dict(data = appt_options)
   return render_template("book.html", **context)
+
+
+@app.route('/createappt', methods=['POST'])
+def createappt():
+  customerid = request.form['customerid']
+  designid = request.form['designid']
+  artistid = request.form['artistid']
+  studioid = request.form['studioid']
+  appttime = request.form['appttime']
+  cost = request.form['designcost']
+
+  appttime = str(appttime.replace('T', ' '))
+  idquery = "SELECT MAX(appointment_id) FROM appointments"
+  cursor = g.conn.execute(idquery)
+  for result in cursor:
+    max_id = result
+  cursor.close()
+  max_id = int(max_id[0])
+  print(customerid)
+  print(designid)
+  print(artistid)
+  print(studioid)
+  print(appttime)
+  insertquery = "INSERT INTO appointments VALUES({}, '{}', NULL, {}, {}, {}, {}, NULL, {})".format(max_id+1, appttime, cost, artistid, designid, customerid, studioid)
+  #cursor = g.conn.execute(sqlquery)
+  #cursor.close()
+  #context = None
+  #return render_template("artists.html", **context)
+  g.conn.execute(insertquery)
+  return redirect('/appointments')
 
 
 # Example of adding new data to the database
