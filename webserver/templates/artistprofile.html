@@ -79,6 +79,9 @@
                 Amount Paid
             </div>
             <div class = "col-sm-1">
+                Confirm
+            </div>
+            <div class = "col-sm-1">
                 Delete Appointment
             </div>
         </div>
@@ -107,6 +110,15 @@
             </div>
             <div class = "col-sm-1">
                 <a href="/payment/{{v.paymentid}}">{{v.paid}}</a>
+            </div>
+            <div class = "col-sm-1">
+                {% if v.confirmed %}
+                Confirmed
+                {% else %}
+                <form method="POST" action="/confirm/{{v.id}}">
+                <input type="submit" id = "{{v.id}}" class="btn btn-primary" value = "✓">
+                </form>
+                {% endif %}
             </div>
             <div class = "col-sm-1">
                 {% if not v.paid %}

@@ -19,7 +19,7 @@
             <div class = "col-sm-1">
                 Artist Name
             </div>
-            <div class = "col-sm-3">
+            <div class = "col-sm-2">
                 Design
             </div>
             <div class = "col-sm-1">
@@ -32,10 +32,13 @@
                 Cost
             </div>
             <div class = "col-sm-2">
-                Address
+                Studio Address
             </div>
             <div class = "col-sm-1">
                 Amount Paid
+            </div>
+            <div class = "col-sm-1">
+                Confirm
             </div>
         </div>
             {% for k,v in data.items() %}
@@ -49,7 +52,7 @@
             <div class = "col-sm-1">
                 <a href="/artist/{{v.artistid}}">{{v.artist}}</a>
             </div>
-            <div class = "col-sm-3">
+            <div class = "col-sm-2">
                 <a href="/designs/{{v.designid}}">{{v.design}}</a>
             </div>
             <div class = "col-sm-1">
@@ -66,6 +69,11 @@
             </div>
             <div class = "col-sm-1">
                 <a href="/payment/{{v.paymentid}}">{{v.paid}}</a>
+            </div>
+            <div class = "col-sm-1">
+                {% if v.confirmed %}
+                Confirmed
+                {% endif %}
             </div>
             </div>
            

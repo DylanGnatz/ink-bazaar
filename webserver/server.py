@@ -239,7 +239,7 @@ def getstudio(studioid=None):
 def appointments():
   print(request.args)
 
-  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments LEFT JOIN customers ON appointments.customer_id = customers.customer_id LEFT JOIN artists ON appointments.artist_id = artists.artist_id LEFT JOIN designs ON appointments.design_id = designs.design_id LEFT JOIN studio ON appointments.studio_id = studio.studio_id LEFT JOIN payments ON appointments.payment_id = payments.payment_id;"
+  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id, appointments.confirmed FROM appointments LEFT JOIN customers ON appointments.customer_id = customers.customer_id LEFT JOIN artists ON appointments.artist_id = artists.artist_id LEFT JOIN designs ON appointments.design_id = designs.design_id LEFT JOIN studio ON appointments.studio_id = studio.studio_id LEFT JOIN payments ON appointments.payment_id = payments.payment_id;"
   #
   # example of a database query
   #
@@ -260,7 +260,8 @@ def appointments():
     'customerid': result[10],
     'designid': result[11],
     'studioid': result[12],
-    'paymentid': result[13]}
+    'paymentid': result[13],
+    'confirmed': result[14]}
     appts[result[0]] = appt
   cursor.close()
   context = dict(data = appts)
@@ -270,7 +271,7 @@ def appointments():
 def getappointment(apptid=None):
   print(request.args)
 
-  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments JOIN customers ON appointments.customer_id = customers.customer_id JOIN artists ON appointments.artist_id = artists.artist_id JOIN designs ON appointments.design_id = designs.design_id JOIN studio ON appointments.studio_id = studio.studio_id JOIN payments ON appointments.payment_id = payments.payment_id WHERE appointments.appointment_id = {};".format(apptid)
+  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id, appointments.confirmed FROM appointments JOIN customers ON appointments.customer_id = customers.customer_id JOIN artists ON appointments.artist_id = artists.artist_id JOIN designs ON appointments.design_id = designs.design_id JOIN studio ON appointments.studio_id = studio.studio_id JOIN payments ON appointments.payment_id = payments.payment_id WHERE appointments.appointment_id = {};".format(apptid)
   #
   # example of a database query
   #
@@ -291,7 +292,8 @@ def getappointment(apptid=None):
     'customerid': result[10],
     'designid': result[11],
     'studioid': result[12],
-    'paymentid': result[13]}
+    'paymentid': result[13],
+    'confirmed': result[14]}
     appts[result[0]] = appt
   cursor.close()
   context = dict(data = appts)
@@ -365,7 +367,7 @@ def profile(profileid=None):
     'registered': result[5],
     'gender': result[6]
     }
-  sqlquery2 = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments LEFT JOIN customers ON appointments.customer_id = customers.customer_id LEFT JOIN artists ON appointments.artist_id = artists.artist_id LEFT JOIN designs ON appointments.design_id = designs.design_id LEFT JOIN studio ON appointments.studio_id = studio.studio_id LEFT JOIN payments ON appointments.payment_id = payments.payment_id WHERE customers.customer_id = {};".format(profileid)
+  sqlquery2 = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id, appointments.confirmed FROM appointments LEFT JOIN customers ON appointments.customer_id = customers.customer_id LEFT JOIN artists ON appointments.artist_id = artists.artist_id LEFT JOIN designs ON appointments.design_id = designs.design_id LEFT JOIN studio ON appointments.studio_id = studio.studio_id LEFT JOIN payments ON appointments.payment_id = payments.payment_id WHERE customers.customer_id = {};".format(profileid)
   #
   # example of a database query
   #
@@ -386,7 +388,8 @@ def profile(profileid=None):
     'customerid': result[10],
     'designid': result[11],
     'studioid': result[12],
-    'paymentid': result[13]}
+    'paymentid': result[13],
+    'confirmed': result[14]}
     appts[result[0]] = appt
   cursor.close()
   customer['appts'] = appts
@@ -433,7 +436,7 @@ def artistprofile(profileid=None):
     designs.append(design)
   cursor.close()
   profile['designs'] = designs
-  sqlquery3 = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments LEFT JOIN customers ON appointments.customer_id = customers.customer_id LEFT JOIN artists ON appointments.artist_id = artists.artist_id LEFT JOIN designs ON appointments.design_id = designs.design_id LEFT JOIN studio ON appointments.studio_id = studio.studio_id LEFT JOIN payments ON appointments.payment_id = payments.payment_id WHERE artists.artist_id = {};".format(profileid)
+  sqlquery3 = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id, appointments.confirmed FROM appointments LEFT JOIN customers ON appointments.customer_id = customers.customer_id LEFT JOIN artists ON appointments.artist_id = artists.artist_id LEFT JOIN designs ON appointments.design_id = designs.design_id LEFT JOIN studio ON appointments.studio_id = studio.studio_id LEFT JOIN payments ON appointments.payment_id = payments.payment_id WHERE artists.artist_id = {};".format(profileid)
   #
   # example of a database query
   #
@@ -454,7 +457,8 @@ def artistprofile(profileid=None):
     'customerid': result[10],
     'designid': result[11],
     'studioid': result[12],
-    'paymentid': result[13]}
+    'paymentid': result[13],
+    'confirmed': result[14]}
     appts[result[0]] = appt
   cursor.close()
   profile['appts'] = appts
@@ -599,7 +603,14 @@ def createappt():
 def deleteappt(apptid=None):
   deletequery = "DELETE FROM APPOINTMENTS WHERE appointment_id = {}".format(apptid)
   g.conn.execute(deletequery)
-  return redirect('/profile/2')
+  return redirect('/appointments')
+# Example of adding new data to the database
+
+@app.route('/confirm/<apptid>', methods=['POST'])
+def confirm(apptid=None):
+  updatequery = "UPDATE appointments SET confirmed = True WHERE appointment_id = {}".format(apptid)
+  g.conn.execute(updatequery)
+  return redirect('/appointments')
 # Example of adding new data to the database
 
 @app.route('/add', methods=['POST'])
