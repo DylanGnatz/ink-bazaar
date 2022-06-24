@@ -11,7 +11,7 @@
         
         <div class="row">
             <div class = "col-sm-1">
-                Design ID
+                Appointment ID
             </div>
             <div class = "col-sm-1">
                 Customer Name
@@ -44,13 +44,13 @@
                 {{v.id}}
             </div>
             <div class = "col-sm-1">
-                {{v.customer}}
+                <a href="/profile/{{v.customerid}}">{{v.customer}}</a>
             </div>
             <div class = "col-sm-1">
-                {{v.artist}}
+                <a href="/artist/{{v.artistid}}">{{v.artist}}</a>
             </div>
             <div class = "col-sm-3">
-                {{v.design}}
+                <a href="/designs/{{v.designid}}">{{v.design}}</a>
             </div>
             <div class = "col-sm-1">
                 {{v.start}}
@@ -62,10 +62,10 @@
                 {{v.cost}}
             </div>
             <div class = "col-sm-2">
-                {{v.address}}
+                <a href="/studios/{{v.studioid}}">{{v.address}}</a>
             </div>
             <div class = "col-sm-1">
-                {{v.paid}}
+                <a href="/payment/{{v.paymentid}}">{{v.paid}}</a>
             </div>
             </div>
            

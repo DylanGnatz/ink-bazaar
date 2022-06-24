@@ -161,12 +161,12 @@ def index():
 # Notice that the function name is another() rather than index()
 # The functions for each app.route need to have different names
 #
-
-@app.route('/designs')
-def designs():
+@app.route('/designs/<designid>')
+def getdesign(designid=None):
   print(request.args)
-
-  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.available = true;"
+  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.available = true;"
+  if(designid):
+    sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.available = true AND designs.design_id ={};".format(designid)
   #
   # example of a database query
   #
@@ -181,6 +181,32 @@ def designs():
     'state': result[4],
     'cost': result[5],
     'available': result[6],
+    'artistid': result[7],
+    }
+    designs[result[0]] = design
+  cursor.close()
+  print(designs)
+  context = dict(data = designs)
+  return render_template("designs.html", **context)
+
+@app.route('/designs')
+def designs(designid=None):
+  print(request.args)
+  sqlquery = "SELECT designs.design_id, artists.name, designs.description, artists.city, artists.state, designs.cost, designs.available, artists.artist_id FROM designs JOIN artists ON designs.artist_id = artists.artist_id WHERE designs.available = true;"
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  designs = {}
+  for result in cursor:
+    design = {
+    'id': result[0],
+    'name': result[1],
+    'desc': result[2],
+    'city': result[3],
+    'state': result[4],
+    'cost': result[5],
+    'available': result[6],
+    'artistid': result[7],
     }
     designs[result[0]] = design
   cursor.close()
@@ -234,13 +260,36 @@ def studios():
   context = dict(data = studios)
   return render_template("studios.html", **context)
 
+@app.route('/studios/<studioid>')
+def getstudio(studioid=None):
+  print(request.args)
+
+  sqlquery = "SELECT * FROM studio WHERE studio_id = {};".format(studioid)
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  studios = {}
+  for result in cursor:
+    studio = {
+    'id': result[0],
+    'address': result[1],
+    'city': result[2],
+    'state': result[3],
+    'zip': result[4]
+    }
+    studios[result[0]] = studio
+  cursor.close()
+  context = dict(data = studios)
+  return render_template("studios.html", **context)
+
 
 
 @app.route('/appointments')
 def appointments():
   print(request.args)
 
-  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount FROM appointments JOIN customers ON appointments.customer_id = customers.customer_id JOIN artists ON appointments.artist_id = artists.artist_id JOIN designs ON appointments.design_id = designs.design_id JOIN studio ON appointments.studio_id = studio.studio_id JOIN payments ON appointments.payment_id = payments.payment_id;"
+  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments JOIN customers ON appointments.customer_id = customers.customer_id JOIN artists ON appointments.artist_id = artists.artist_id JOIN designs ON appointments.design_id = designs.design_id JOIN studio ON appointments.studio_id = studio.studio_id JOIN payments ON appointments.payment_id = payments.payment_id;"
   #
   # example of a database query
   #
@@ -256,8 +305,43 @@ def appointments():
     'end': result[5],
     'cost': result[6],
     'address': result[7],
-    'paid': result[8]
-    }
+    'paid': result[8],
+    'artistid': result[9],
+    'customerid': result[10],
+    'designid': result[11],
+    'studioid': result[12],
+    'paymentid': result[13]}
+    appts[result[0]] = appt
+  cursor.close()
+  context = dict(data = appts)
+  return render_template("appointments.html", **context)
+
+@app.route('/appointment/<apptid>')
+def getappointment(apptid=None):
+  print(request.args)
+
+  sqlquery = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments JOIN customers ON appointments.customer_id = customers.customer_id JOIN artists ON appointments.artist_id = artists.artist_id JOIN designs ON appointments.design_id = designs.design_id JOIN studio ON appointments.studio_id = studio.studio_id JOIN payments ON appointments.payment_id = payments.payment_id WHERE appointments.appointment_id = {};".format(apptid)
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  appts = {}
+  for result in cursor:
+    appt = {
+    'id': result[0],
+    'customer': result[1],
+    'artist': result[2],
+    'design': result[3],
+    'start': result[4],
+    'end': result[5],
+    'cost': result[6],
+    'address': result[7],
+    'paid': result[8],
+    'artistid': result[9],
+    'customerid': result[10],
+    'designid': result[11],
+    'studioid': result[12],
+    'paymentid': result[13]}
     appts[result[0]] = appt
   cursor.close()
   context = dict(data = appts)
@@ -268,6 +352,30 @@ def billing():
   print(request.args)
 
   sqlquery = "SELECT bill.payment_id, bill.appointment_id, payments.payment_date, payments.method, payments.amount FROM bill JOIN payments ON bill.payment_id = payments.payment_id;"
+
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery)
+  payments = {}
+  for result in cursor:
+    payment = {
+    'pay_id': result[0],
+    'appt_id': result[1],
+    'date': result[2],
+    'method': result[3],
+    'amount': result[4],
+    }
+    payments[result[0]] = payment
+  cursor.close()
+  context = dict(data = payments)
+  return render_template("billing.html", **context)
+
+@app.route('/payment/<paymentid>')
+def payment(paymentid=None):
+  print(request.args)
+
+  sqlquery = "SELECT bill.payment_id, bill.appointment_id, payments.payment_date, payments.method, payments.amount FROM bill JOIN payments ON bill.payment_id = payments.payment_id WHERE bill.payment_id = {};".format(paymentid)
 
   #
   # example of a database query
