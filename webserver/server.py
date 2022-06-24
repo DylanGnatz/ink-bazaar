@@ -229,7 +229,7 @@ def studios():
     'state': result[3],
     'zip': result[4]
     }
-    studios[result[1]] = studio
+    studios[result[0]] = studio
   cursor.close()
   context = dict(data = studios)
   return render_template("studios.html", **context)
@@ -245,9 +245,20 @@ def appointments():
   # example of a database query
   #
   cursor = g.conn.execute(sqlquery)
-  appts = []
+  appts = {}
   for result in cursor:
-    appts.append(result)  # can also be accessed using result[0]
+    appt = {
+    'id': result[0],
+    'customer': result[1],
+    'artist': result[2],
+    'design': result[3],
+    'start': result[4],
+    'end': result[5],
+    'cost': result[6],
+    'address': result[7],
+    'paid': result[8]
+    }
+    appts[result[0]] = appt
   cursor.close()
   context = dict(data = appts)
   return render_template("appointments.html", **context)
@@ -256,14 +267,22 @@ def appointments():
 def billing():
   print(request.args)
 
-  sqlquery = "SELECT * FROM payments;"
+  sqlquery = "SELECT bill.payment_id, bill.appointment_id, payments.payment_date, payments.method, payments.amount FROM bill JOIN payments ON bill.payment_id = payments.payment_id;"
+
   #
   # example of a database query
   #
   cursor = g.conn.execute(sqlquery)
-  payments = []
+  payments = {}
   for result in cursor:
-    payments.append(result)  # can also be accessed using result[0]
+    payment = {
+    'pay_id': result[0],
+    'appt_id': result[1],
+    'date': result[2],
+    'method': result[3],
+    'amount': result[4],
+    }
+    payments[result[0]] = payment
   cursor.close()
   context = dict(data = payments)
   return render_template("billing.html", **context)
@@ -277,10 +296,17 @@ def profile(profileid=None):
   # example of a database query
   #
   cursor = g.conn.execute(sqlquery)
-  customer = []
+  
   for result in cursor:
-    customer.append(result)  # can also be accessed using result[0]
-  cursor.close()
+    customer = {
+    'id': result[0],
+    'name': result[1],
+    'bio': result[2],
+    'city': result[3],
+    'state': result[4],
+    'registered': result[5],
+    'gender': result[6]
+    }
   context = dict(data = customer)
   return render_template("profile.html", **context)
 

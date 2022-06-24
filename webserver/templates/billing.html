@@ -1,11 +1,54 @@
-
 {% extends "index.html" %}
 
 {% block content %}
+<script>
+  var data = {{ data|tojson }};
+  console.log(data);
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'artists.js') }}"></script>
 
+    <div class="container-fluid">
+        
+        <div class="row">
+            <div class = "col-sm-2">
+                Payment ID
+            </div>
+            <div class = "col-sm-2">
+                Appointment ID
+            </div>
+            <div class = "col-sm-2">
+                Date
+            </div>
+            <div class = "col-sm-2">
+                Method
+            </div>
+            <div class = "col-sm-2">
+                Amount
+            </div>
+        </div>
+        </div>
+            {% for k,v in data.items() %}
+            <div class="row">
+            <div class = "col-sm-2">
+                {{v.pay_id}}
+            </div>
+            <div class = "col-sm-2">
+                {{v.appt_id}}
+            </div>
+            <div class = "col-sm-2">
+                {{v.date}}
+            </div>
+            <div class = "col-sm-2">
+                {{v.method}}
+            </div>
+            <div class = "col-sm-2">
+                {{v.amount}}
+            </div>
+            </div>
+           
+            {% endfor %}
+        </div>
     </div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-</div>
+
+    
 {% endblock %}

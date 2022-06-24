@@ -1,11 +1,23 @@
-
-{% extends "index.html" %}
-
+<{% extends "index.html" %}
 {% block content %}
+<script>
+  var data = {{ data|tojson }};
+  console.log(data);
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'artists.js') }}"></script>
 
-    </div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-</div>
+    <div class="container-fluid">
+            <br>
+            <h1><i>{{data.name}}</i></h1>
+            <br>
+            <h3>Lives in {{data.city}}, {{data.state}}</h3>
+            <br>
+            <h4>Gender: {{data.gender}}</h4>
+            <br>
+            <h4>Member since: {{data.registered}}</h4>
+            <br>
+            Bio: {{data.bio}}
+            <br> 
+     </div>
+
 {% endblock %}
