@@ -27,19 +27,16 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
         <a class="navbar-brand" href="/"> InkBazaar</a>
         <a class="navbar-brand" href="/designs"> Designs</a>
+        <a class="navbar-brand" href="/artists"> Artists</a>
         <a class="navbar-brand" href="/appointments"> Appointments</a>
         <a class="navbar-brand" href="/billing"> Billing</a>
         <a class="navbar-brand" href="/studios"> Studios</a>
         <a class="navbar-brand" href="/profile"> Profile</a>
         
     </nav>
-  <h1>Some famous Computer Scientists</h1>
-  <div>{{data}}</div>
-
-  <div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
+  <div class="container">
+        {% block content %}
+        {% endblock %}
   </div>
 
 <p><a href="another">Go to the other page</a></p>

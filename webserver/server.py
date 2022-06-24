@@ -171,10 +171,20 @@ def designs():
   # example of a database query
   #
   cursor = g.conn.execute(sqlquery)
-  designs = []
+  designs = {}
   for result in cursor:
-    designs.append(result)  # can also be accessed using result[0]
+    design = {
+    'id': result[0],
+    'name': result[1],
+    'desc': result[2],
+    'city': result[3],
+    'state': result[4],
+    'cost': result[5],
+    'available': result[6],
+    }
+    designs[result[0]] = design
   cursor.close()
+  print(designs)
   context = dict(data = designs)
   return render_template("designs.html", **context)
 
@@ -187,9 +197,16 @@ def artists():
   # example of a database query
   #
   cursor = g.conn.execute(sqlquery)
-  artists = []
+  artists = {}
   for result in cursor:
-    artists.append(result)  # can also be accessed using result[0]
+    artist = {
+    'id': result[0],
+    'name': result[1],
+    'city': result[2],
+    'state': result[3],
+    'bio': result[4]
+    }
+    artists[result[0]] = artist
   cursor.close()
   context = dict(data = artists)
   return render_template("artists.html", **context)
@@ -203,9 +220,16 @@ def studios():
   # example of a database query
   #
   cursor = g.conn.execute(sqlquery)
-  studios = []
+  studios = {}
   for result in cursor:
-    studios.append(result)  # can also be accessed using result[0]
+    studio = {
+    'id': result[0],
+    'address': result[1],
+    'city': result[2],
+    'state': result[3],
+    'zip': result[4]
+    }
+    studios[result[1]] = studio
   cursor.close()
   context = dict(data = studios)
   return render_template("studios.html", **context)
