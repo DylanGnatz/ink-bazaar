@@ -50,6 +50,73 @@
             </div>
            
             {% endfor %}
+            <br>
+            <h2> appointments </h2>
+            <br>
+            <div class="row">
+            <div class = "col-sm-1">
+                Appointment ID
+            </div>
+            <div class = "col-sm-1">
+                Customer Name
+            </div>
+            <div class = "col-sm-2">
+                Design
+            </div>
+            <div class = "col-sm-1">
+                Start
+            </div>
+            <div class = "col-sm-1">
+                End
+            </div>
+            <div class = "col-sm-1">
+                Cost
+            </div>
+            <div class = "col-sm-2">
+                Studio Address
+            </div>
+            <div class = "col-sm-1">
+                Amount Paid
+            </div>
+            <div class = "col-sm-1">
+                Delete Appointment
+            </div>
+        </div>
+            {% for k,v in data.appts.items() %}
+            <div class="row">
+            <div class = "col-sm-1">
+                {{v.id}}
+            </div>
+            <div class = "col-sm-1">
+                <a href="/artist/{{v.artistid}}">{{v.customer}}</a>
+            </div>
+            <div class = "col-sm-2">
+                <a href="/designs/{{v.designid}}">{{v.design}}</a>
+            </div>
+            <div class = "col-sm-1">
+                {{v.start}}
+            </div>
+            <div class = "col-sm-1">
+                {{v.end}}
+            </div>
+            <div class = "col-sm-1">
+                {{v.cost}}
+            </div>
+            <div class = "col-sm-2">
+                <a href="/studios/{{v.studioid}}">{{v.address}}</a>
+            </div>
+            <div class = "col-sm-1">
+                <a href="/payment/{{v.paymentid}}">{{v.paid}}</a>
+            </div>
+            <div class = "col-sm-1">
+                {% if not v.paid %}
+                <form method="POST" action="/deleteappt/{{v.id}}">
+                <input type="submit" id = "{{v.id}}" class="btn btn-danger" value = "X">
+                </form>
+                {% endif %}
+            </div>
+            </div>
+            {% endfor %}
         </div>
 
      </div>

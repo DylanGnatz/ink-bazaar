@@ -101,51 +101,8 @@ def index():
 
   # DEBUG: this is debugging code to see what request looks like
   print(request.args)
-
-
-  #
-  # example of a database query
-  #
-  cursor = g.conn.execute("SELECT * FROM artists")
-  names = []
-  for result in cursor:
-    names.append(result)  # can also be accessed using result[0]
-  cursor.close()
-
-  #
-  # Flask uses Jinja templates, which is an extension to HTML where you can
-  # pass data to a template and dynamically generate HTML based on the data
-  # (you can think of it as simple PHP)
-  # documentation: https://realpython.com/blog/python/primer-on-jinja-templating/
-  #
-  # You can see an example template in templates/index.html
-  #
-  # context are the variables that are passed to the template.
-  # for example, "data" key in the context variable defined below will be 
-  # accessible as a variable in index.html:
-  #
-  #     # will print: [u'grace hopper', u'alan turing', u'ada lovelace']
-  #     <div>{{data}}</div>
-  #     
-  #     # creates a <div> tag for each element in data
-  #     # will print: 
-  #     #
-  #     #   <div>grace hopper</div>
-  #     #   <div>alan turing</div>
-  #     #   <div>ada lovelace</div>
-  #     #
-  #     {% for n in data %}
-  #     <div>{{n}}</div>
-  #     {% endfor %}
-  #
-  context = dict(data = names)
-
-
-  #
-  # render_template looks in the templates/ folder for files.
-  # for example, the below file reads template/index.html
-  #
-  return render_template("index.html", **context)
+  print("in index")
+  return render_template("welcome.html")
 
 #
 # This is an example of a different path.  You can see it at:
@@ -408,6 +365,31 @@ def profile(profileid=None):
     'registered': result[5],
     'gender': result[6]
     }
+  sqlquery2 = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments LEFT JOIN customers ON appointments.customer_id = customers.customer_id LEFT JOIN artists ON appointments.artist_id = artists.artist_id LEFT JOIN designs ON appointments.design_id = designs.design_id LEFT JOIN studio ON appointments.studio_id = studio.studio_id LEFT JOIN payments ON appointments.payment_id = payments.payment_id WHERE customers.customer_id = {};".format(profileid)
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery2)
+  appts = {}
+  for result in cursor:
+    appt = {
+    'id': result[0],
+    'customer': result[1],
+    'artist': result[2],
+    'design': result[3],
+    'start': result[4],
+    'end': result[5],
+    'cost': result[6],
+    'address': result[7],
+    'paid': result[8],
+    'artistid': result[9],
+    'customerid': result[10],
+    'designid': result[11],
+    'studioid': result[12],
+    'paymentid': result[13]}
+    appts[result[0]] = appt
+  cursor.close()
+  customer['appts'] = appts
   context = dict(data = customer)
   return render_template("profile.html", **context)
 
@@ -451,6 +433,31 @@ def artistprofile(profileid=None):
     designs.append(design)
   cursor.close()
   profile['designs'] = designs
+  sqlquery3 = "SELECT appointments.appointment_id, customers.name, artists.name, designs.description, appointments.start_time, appointments.end_time, appointments.projected_cost, studio.address, payments.amount, artists.artist_id, customers.customer_id, designs.design_id, studio.studio_id, payments.payment_id FROM appointments LEFT JOIN customers ON appointments.customer_id = customers.customer_id LEFT JOIN artists ON appointments.artist_id = artists.artist_id LEFT JOIN designs ON appointments.design_id = designs.design_id LEFT JOIN studio ON appointments.studio_id = studio.studio_id LEFT JOIN payments ON appointments.payment_id = payments.payment_id WHERE artists.artist_id = {};".format(profileid)
+  #
+  # example of a database query
+  #
+  cursor = g.conn.execute(sqlquery3)
+  appts = {}
+  for result in cursor:
+    appt = {
+    'id': result[0],
+    'customer': result[1],
+    'artist': result[2],
+    'design': result[3],
+    'start': result[4],
+    'end': result[5],
+    'cost': result[6],
+    'address': result[7],
+    'paid': result[8],
+    'artistid': result[9],
+    'customerid': result[10],
+    'designid': result[11],
+    'studioid': result[12],
+    'paymentid': result[13]}
+    appts[result[0]] = appt
+  cursor.close()
+  profile['appts'] = appts
   context = dict(data = profile)
   return render_template("artistprofile.html", **context)
 
@@ -588,7 +595,13 @@ def createappt():
   return redirect('/appointments')
 
 
+@app.route('/deleteappt/<apptid>', methods=['POST'])
+def deleteappt(apptid=None):
+  deletequery = "DELETE FROM APPOINTMENTS WHERE appointment_id = {}".format(apptid)
+  g.conn.execute(deletequery)
+  return redirect('/profile/2')
 # Example of adding new data to the database
+
 @app.route('/add', methods=['POST'])
 def add():
   name = request.form['name']
