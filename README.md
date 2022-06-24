@@ -13,10 +13,11 @@ InkBazaar is running at the following address:
 http://35.205.189.22:8111
 
 ## Database
-My database for this project resides at "postgresql://dlg2178:<password>@35.196.192.139/proj1part2"
+My database for this project resides at under the uni dlg2178. 
 
 ## ER Diagram
 ![ER Diagram](/final_ER.png?raw=true "ER Diagram")
+I added a confirmed boolean to the appointments entity to support the artist-side appointment confirmation feature. 
 
 ## Description
 The platform offers views for all of the entities. From the NavBar, users can view designs, artist lists, appointment lists, billing records, studio addresses, and customer profiles. 
