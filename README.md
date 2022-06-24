@@ -39,7 +39,9 @@ Billing shows all the billing records for previous appointments and links to the
 Studios lists the ids and addresses of all the studios in the system. 
 
 
-I have implemented the majority of the functionalities on the platform, but still need to implement user registration and authentication, which will separate the views and permissions between artists and customers. Additionally I need to implement billing. 
+I have implemented the majority of the functionalities on the platform, but still need to implement user registration and authentication, which will separate the views and permissions between artists and customers. Additionally I need to implement billing. I spent over 30 hours working on this prototype and the last features became out of the scope of what 1 person could feasibly do with a limited time. 
+
+I plan to continue working on this project, so user authentication and billing are in the works. 
 
  
 
